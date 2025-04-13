@@ -1,0 +1,28 @@
+{
+    "labels" : {
+        "username": "Username",
+        "usernameOrEmail": "Username or Email",
+        "password": "Password",
+        "teacherView": "Teacher Dashboard",
+        "studentView": "Student Dashboard",
+        "login": "Login",
+        "notification": {
+            "title": "Notification",
+            "empty": "No notifications"
+        },
+        "teacher": "teacher",
+        "student": "student",
+        "currentClass": "Current Class",
+        "pendingClass": "Pending Class",
+        "latest": "Latest",
+        "az": "A-Z"
+    },
+    "placeholders": {
+        "sort": "Sort based on",
+        "search": "Search",
+        "searchClass": "Search Class"
+    },
+    "actions": {
+        "findClass": "Tìm lớp"
+    }
+}

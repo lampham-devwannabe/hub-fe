@@ -1,0 +1,28 @@
+{
+    "labels": {
+        "userName": "Tên người dùng",
+        "usernameOrEmail": "Tên người dùng hoặc Email",
+        "password": "Mật khẩu",
+        "teacherView": "Lớp học",
+        "studentView": "Student Dashboard",  
+        "login": "Đăng nhập",
+        "notification": {
+            "title": "Thông báo",
+            "empty": "Không có thông báo"
+        },
+        "teacher": "Giáo viên",
+        "student": "Học sinh",
+        "currentClass": "Lớp hiện tại",
+        "pendingClass": "Lớp đang chờ",
+        "latest": "Mới nhất",
+        "az": "A-Z"
+    },
+    "placeholders": {
+        "sort": "Sắp xếp",
+        "search": "Tìm kiếm",
+        "searchClass": "Tìm lớp"
+    },
+    "actions": {
+        "findClass": "Tìm lớp"
+    }
+}
