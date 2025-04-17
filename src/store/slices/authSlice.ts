@@ -4,12 +4,23 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { checkAuthApi, loginApi, logoutApi } from '../../services/Auth/index' // API call defined later
 import { profileApi } from '../../services/Account'
 
-export interface User {
+interface BaseUser {
   id: string
-  role: 'Teacher' | 'Student'
   name: string
   email: string
 }
+
+interface Teacher extends BaseUser {
+  role: 'Teacher'
+  priceClass: number
+  studentCount: number
+}
+
+interface Student extends BaseUser {
+  role: 'Student'
+}
+
+export type User = Teacher | Student
 
 interface AuthState {
   user: User | null
@@ -33,13 +44,24 @@ export const login = createAsyncThunk(
       // const credentials = {email, password}
       await loginApi(credentials) // Assume API returns user data
       const profileResponse = await profileApi()
-
+      let user: User
       // Map the profile data to User interface
-      const user: User = {
-        id: profileResponse.id,
-        role: profileResponse.role,
-        name: profileResponse.name,
-        email: profileResponse.email
+      if (profileResponse.role === 'Teacher') {
+        user = {
+          id: profileResponse.id,
+          role: 'Teacher',
+          name: profileResponse.name,
+          email: profileResponse.email,
+          priceClass: profileResponse.priceClass,
+          studentCount: profileResponse.studentCount
+        }
+      } else {
+        user = {
+          id: profileResponse.id,
+          role: 'Student',
+          name: profileResponse.name,
+          email: profileResponse.email
+        }
       }
 
       return user
@@ -63,14 +85,26 @@ export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValu
 export const checkAuth = createAsyncThunk('auth/checkAuth', async (_, { rejectWithValue }) => {
   try {
     await checkAuthApi()
-    const profile = await profileApi()
-    const user: User = {
-      id: profile.id,
-      role: profile.role,
-      name: profile.name,
-      email: profile.email
+    const profileResponse = await profileApi()
+    let user: User
+    // Map the profile data to User interface
+    if (profileResponse.role === 'Teacher') {
+      user = {
+        id: profileResponse.id,
+        role: 'Teacher',
+        name: profileResponse.name,
+        email: profileResponse.email,
+        priceClass: profileResponse.priceClass,
+        studentCount: profileResponse.studentCount
+      }
+    } else {
+      user = {
+        id: profileResponse.id,
+        role: 'Student',
+        name: profileResponse.name,
+        email: profileResponse.email
+      }
     }
-
     return user
   } catch (err) {
     return rejectWithValue('Auth check failed')

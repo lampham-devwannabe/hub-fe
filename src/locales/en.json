@@ -1,5 +1,7 @@
 {
     "labels" : {
+        "english": "English",
+        "vietnamese": "Vietnamese",
         "username": "Username",
         "usernameOrEmail": "Username or Email",
         "password": "Password",
@@ -15,7 +17,18 @@
         "currentClass": "Current Class",
         "pendingClass": "Pending Class",
         "latest": "Latest",
-        "az": "A-Z"
+        "az": "A-Z",
+        "logout": "Logout",
+        "classCode": "Class Code",
+        "news": "News",
+        "members": "Members",
+        "assignments": "Assignments",
+        "materials": "Materials",
+        "exitClass": "Exit Class",
+        "confirm": "Confirm",
+        "personalInfo": "Personal Info",
+        "userGuide": "User guide",
+        "support": "Support"
     },
     "placeholders": {
         "sort": "Sort based on",

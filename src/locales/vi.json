@@ -1,5 +1,7 @@
 {
     "labels": {
+        "english": "Tiếng Anh",
+        "vietnamese": "Tiếng Việt",
         "userName": "Tên người dùng",
         "usernameOrEmail": "Tên người dùng hoặc Email",
         "password": "Mật khẩu",
@@ -15,7 +17,19 @@
         "currentClass": "Lớp hiện tại",
         "pendingClass": "Lớp đang chờ",
         "latest": "Mới nhất",
-        "az": "A-Z"
+        "az": "A-Z",
+        "logout": "Đăng xuất",
+        "classCode": "Mã lớp",
+        "news": "Tin tức",
+        "members": "Thành viên lớp",
+        "assignments": "Bài kiểm tra",
+        "grades": "Điểm thành phần",
+        "materials": "Tài liệu",
+        "exitClass": "Rời khỏi lớp học",
+        "confirm": "Xác nhận",
+        "personalInfo": "Thông tin cá nhân",
+        "userGuide": "Hướng dẫn người dùng",
+        "support": "Hỗ trợ"
     },
     "placeholders": {
         "sort": "Sắp xếp",
