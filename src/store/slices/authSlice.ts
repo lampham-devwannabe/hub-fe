@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { checkAuthApi, loginApi, logoutApi } from '../../services/Auth/index' // API call defined later
+import { refreshAuthApi, loginApi, logoutApi, registerApi, AddAccountRequest } from '../../services/Auth/index' // API call defined later
 import { profileApi } from '../../services/Account'
 
 interface BaseUser {
@@ -11,13 +11,13 @@ interface BaseUser {
 }
 
 interface Teacher extends BaseUser {
-  role: 'Teacher'
+  role: 'TEACHER'
   priceClass: number
   studentCount: number
 }
 
 interface Student extends BaseUser {
-  role: 'Student'
+  role: 'STUDENT'
 }
 
 export type User = Teacher | Student
@@ -39,17 +39,17 @@ const initialState: AuthState = {
 // Async thunk for login
 export const login = createAsyncThunk(
   'auth/login',
-  async (credentials: { email: string; password: string }, { rejectWithValue }) => {
+  async (credentials: { username: string; password: string }, { rejectWithValue }) => {
     try {
       // const credentials = {email, password}
       await loginApi(credentials) // Assume API returns user data
       const profileResponse = await profileApi()
       let user: User
       // Map the profile data to User interface
-      if (profileResponse.role === 'Teacher') {
+      if (profileResponse.role === 'TEACHER') {
         user = {
           id: profileResponse.id,
-          role: 'Teacher',
+          role: 'TEACHER',
           name: profileResponse.name,
           email: profileResponse.email,
           priceClass: profileResponse.priceClass,
@@ -58,18 +58,36 @@ export const login = createAsyncThunk(
       } else {
         user = {
           id: profileResponse.id,
-          role: 'Student',
+          role: 'STUDENT',
           name: profileResponse.name,
           email: profileResponse.email
         }
       }
 
       return user
-    } catch (_error) {
-      return rejectWithValue('Login failed')
+    } catch (error) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } }; message?: string }).response?.data?.message ||
+        (error as { message?: string }).message ||
+        'Login failed'
+      return rejectWithValue(errorMessage)
     }
   }
 )
+
+// Async thunk for register
+export const register = createAsyncThunk('auth/register', async (request: AddAccountRequest, { rejectWithValue }) => {
+  try {
+    await registerApi(request)
+    return { message: 'Registration successful' }
+  } catch (error) {
+    const errorMessage =
+      (error as { response?: { data?: { message?: string } }; message?: string }).response?.data?.message ||
+      (error as { message?: string }).message ||
+      'Registration failed'
+    return rejectWithValue(errorMessage)
+  }
+})
 
 // Async thunk for logout
 export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
@@ -78,20 +96,29 @@ export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValu
     const response = await logoutApi()
     return response // No need to return user data on logout
   } catch (error) {
-    return rejectWithValue('Logout failed')
+    const errorMessage =
+      (error as { response?: { data?: { message?: string } }; message?: string }).response?.data?.message ||
+      (error as { message?: string }).message ||
+      'Logout failed'
+    return rejectWithValue(errorMessage)
   }
 })
 
-export const checkAuth = createAsyncThunk('auth/checkAuth', async (_, { rejectWithValue }) => {
+export const refreshAuth = createAsyncThunk('auth/refreshAuth', async (_, { rejectWithValue }) => {
   try {
-    await checkAuthApi()
+    const authResponse = await refreshAuthApi()
+
+    if (!authResponse.authenticated) {
+      return rejectWithValue('Not authenticated')
+    }
+
     const profileResponse = await profileApi()
     let user: User
     // Map the profile data to User interface
-    if (profileResponse.role === 'Teacher') {
+    if (profileResponse.role === 'TEACHER') {
       user = {
         id: profileResponse.id,
-        role: 'Teacher',
+        role: 'TEACHER',
         name: profileResponse.name,
         email: profileResponse.email,
         priceClass: profileResponse.priceClass,
@@ -100,14 +127,14 @@ export const checkAuth = createAsyncThunk('auth/checkAuth', async (_, { rejectWi
     } else {
       user = {
         id: profileResponse.id,
-        role: 'Student',
+        role: 'STUDENT',
         name: profileResponse.name,
         email: profileResponse.email
       }
     }
     return user
   } catch (err) {
-    return rejectWithValue('Auth check failed')
+    return rejectWithValue('Auth refresh failed')
   }
 })
 
@@ -144,6 +171,21 @@ const authSlice = createSlice({
         state.error = action.payload as string
       })
 
+    // Register
+    builder
+      .addCase(register.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(register.fulfilled, (state) => {
+        state.loading = false
+        // Don't auto-login after registration
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload as string
+      })
+
     // Logout
     builder
       .addCase(logout.pending, (state) => {
@@ -160,13 +202,13 @@ const authSlice = createSlice({
         state.error = action.payload as string
       })
 
-    // Check Auth
+    // Refresh Auth
     builder
-      .addCase(checkAuth.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(refreshAuth.fulfilled, (state, action: PayloadAction<User>) => {
         state.isAuthenticated = true
         state.user = action.payload
       })
-      .addCase(checkAuth.rejected, (state) => {
+      .addCase(refreshAuth.rejected, (state) => {
         state.isAuthenticated = false
         state.user = null
       })

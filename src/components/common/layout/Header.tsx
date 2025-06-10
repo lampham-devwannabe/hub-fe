@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { BookOpen, GlobeIcon } from 'lucide-react'
+import { BookOpen, GlobeIcon, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { NotificationPopover } from '../elements/NotificationPopover'
 import { UserPopover } from '../elements/ProfilePopover'
 import { AppDispatch, RootState } from '../../../store'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../../ui/dropdown-menu'
+import { Progress } from '../../ui/progress'
 import { setLanguage } from '../../../store/slices/localeSlice'
 import { useTranslation } from 'react-i18next'
 
@@ -14,6 +15,53 @@ export const Header = () => {
   const language = useSelector((state: RootState) => state.locale.language)
   const { t } = useTranslation()
   const dispatch = useDispatch<AppDispatch>()
+
+  // Mock student count - replace with actual data from your store/API
+  const currentStudentCount = 45
+
+  const getStudentLimit = (priceClass: string | number) => {
+    const priceClassStr = String(priceClass)?.toLowerCase()
+    switch (priceClassStr) {
+      case 'free':
+        return 80
+      case 'standard':
+        return 150
+      case 'advanced':
+        return 300
+      default:
+        return 80
+    }
+  }
+
+  const renderTeacherInfo = () => {
+    if (!currentUser || currentUser.role !== 'TEACHER') return null
+
+    const limit = getStudentLimit(currentUser.priceClass)
+    const progressValue = (currentStudentCount / limit) * 100
+    const isFree = String(currentUser.priceClass)?.toLowerCase() === 'free'
+
+    return (
+      <div className='flex items-center gap-3'>
+        <div className='flex flex-col gap-1'>
+          <div className='flex items-center gap-2'>
+            <Users className='w-4 h-4 text-blue-600' />
+            <span className='text-sm font-medium text-gray-700'>
+              {currentStudentCount}/{limit} students
+            </span>
+            <span className='text-xs text-blue-600 font-medium'>{currentUser.priceClass}</span>
+          </div>
+          <div className='flex items-center gap-2'>
+            <Progress value={progressValue} className='w-24 h-1.5' />
+            {isFree && (
+              <Link to='/subscription' className='text-xs text-purple-600 hover:text-purple-800 font-medium underline'>
+                Upgrade
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <header className='flex items-center justify-between px-4 py-2 border-b border-gray-300 bg-white'>
@@ -36,21 +84,26 @@ export const Header = () => {
         </Link>
       </nav>
 
-      {/* Right Side: Notification and User Popovers */}
-      <div className='flex items-center gap-8'>
-        <NotificationPopover />
-        <DropdownMenu >
-          <DropdownMenuTrigger className='flex items-center gap-2 px-3 py-2 bg-[#f3f0f0] rounded-md hover:bg-accent'>
-            <GlobeIcon className='w-4 h-4' />
-            <span>{language === 'en' ? 'en' : 'vi'}</span>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            <DropdownMenuItem onClick={() => dispatch(setLanguage('en'))}>{t('labels.english')}</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => dispatch(setLanguage('vi'))}>{t('labels.vietnamese')}</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      {/* Right Side: Teacher Info, Notification and User Popovers */}
+      <div className='flex items-center gap-6'>
+        {renderTeacherInfo()}
 
-        {currentUser && <UserPopover user={currentUser} />}
+        <div className='flex items-center gap-4'>
+          <NotificationPopover />
+
+          <DropdownMenu>
+            <DropdownMenuTrigger className='flex items-center gap-2 px-3 py-2 bg-[#f3f0f0] rounded-md hover:bg-accent'>
+              <GlobeIcon className='w-4 h-4' />
+              <span>{language === 'en' ? 'en' : 'vi'}</span>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+              <DropdownMenuItem onClick={() => dispatch(setLanguage('en'))}>{t('labels.english')}</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => dispatch(setLanguage('vi'))}>{t('labels.vietnamese')}</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {currentUser && <UserPopover user={currentUser} />}
+        </div>
       </div>
     </header>
   )

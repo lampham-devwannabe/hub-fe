@@ -10,11 +10,17 @@ const api = axios.create({
 })
 
 api.interceptors.request.use(
-  (config) => {
-    // Token nằm trong cookie rồi nên không cần attach Authorization nữa
-    return config
+  (response) => {
+    const data = response.data
+    if (data && typeof data.code === 'number' && data.code !== 1000) {
+      return Promise.reject(new Error(data.message || 'Internal server error'))
+    }
+    return response
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    // Network or server errors (not API code logic)
+    return Promise.reject(error)
+  }
 )
 
 // api.interceptors.response.use(
@@ -26,5 +32,10 @@ api.interceptors.request.use(
 //       return Promise.reject(err);
 //     }
 //   );
+export interface ApiResponse<T> {
+  code: number // 1000 = success
+  message: string // Message from backend
+  result: T // Actual data
+}
 
 export default api

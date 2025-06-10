@@ -12,8 +12,8 @@
             "title": "Notification",
             "empty": "No notifications"
         },
-        "teacher": "teacher",
-        "student": "student",
+        "teacher": "Teacher",
+        "student": "Student",
         "currentClass": "Current Class",
         "pendingClass": "Pending Class",
         "latest": "Latest",
@@ -28,14 +28,42 @@
         "confirm": "Confirm",
         "personalInfo": "Personal Info",
         "userGuide": "User guide",
-        "support": "Support"
+        "support": "Support",
+        "signUp": "Sign Up",
+        "signIn": "Sign In",
+        "socialCampaigns": "Your Social Campaigns",
+        "email": "Email",
+        "repeatPassword": "Repeat Password",
+        "fullName": "Full Name (Optional)",
+        "role": "Role",
+        "dateOfBirth": "Date of Birth",
+        "city": "City",
+        "school": "School/Institution (Optional)",
+        "acceptTerms": "I accept the",
+        "terms": "Terms",
+        "plans": "Plans",
+        "contactUs": "Contact Us",
+        "creatingAccount": "Creating Account...",
+        "alreadyHaveAccount": "Already have an account?",
+        "orWith": "Or with",
+        "selectRole": "Please select your role above before signing up with Google",
+        "welcome": "Welcome to the Future of Learning",
+        "slogan": "Join thousands of students and teachers in creating amazing educational experiences. Start your journey today with our comprehensive learning platform.",
+        "subtitle": "Transform Education, One Click at a Time"
     },
     "placeholders": {
         "sort": "Sort based on",
         "search": "Search",
-        "searchClass": "Search Class"
+        "searchClass": "Search Class",
+        "enterEmail": "Enter your email",
+        "enterPassword": "Enter your password",
+        "repeatPassword": "Repeat your password",
+        "enterFullName": "Enter your full name",
+        "selectRole": "Select your role",
+        "selectCity": "Select your city",
+        "enterSchool": "Enter your school or institution"
     },
     "actions": {
-        "findClass": "Tìm lớp"
+        "findClass": "Find Class"
     }
 }

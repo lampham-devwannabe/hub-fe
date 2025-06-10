@@ -2,11 +2,11 @@
     "labels": {
         "english": "Tiếng Anh",
         "vietnamese": "Tiếng Việt",
-        "userName": "Tên người dùng",
+        "username": "Tên người dùng",
         "usernameOrEmail": "Tên người dùng hoặc Email",
         "password": "Mật khẩu",
         "teacherView": "Lớp học",
-        "studentView": "Student Dashboard",  
+        "studentView": "Bảng điều khiển học sinh",  
         "login": "Đăng nhập",
         "notification": {
             "title": "Thông báo",
@@ -29,12 +29,40 @@
         "confirm": "Xác nhận",
         "personalInfo": "Thông tin cá nhân",
         "userGuide": "Hướng dẫn người dùng",
-        "support": "Hỗ trợ"
+        "support": "Hỗ trợ",
+        "signUp": "Đăng ký",
+        "signIn": "Đăng nhập",
+        "socialCampaigns": "Chiến dịch xã hội của bạn",
+        "email": "Email",
+        "repeatPassword": "Nhập lại mật khẩu",
+        "fullName": "Họ và tên (Tùy chọn)",
+        "role": "Vai trò",
+        "dateOfBirth": "Ngày sinh",
+        "city": "Tỉnh/Thành phố",
+        "school": "Trường/Tổ chức (Tùy chọn)",
+        "acceptTerms": "Tôi đồng ý với",
+        "terms": "Điều khoản",
+        "plans": "Gói dịch vụ",
+        "contactUs": "Liên hệ",
+        "creatingAccount": "Đang tạo tài khoản...",
+        "alreadyHaveAccount": "Đã có tài khoản?",
+        "orWith": "Hoặc với",
+        "selectRole": "Vui lòng chọn vai trò trước khi đăng ký với Google",
+        "welcome": "Chào mừng đến với Tương lai của Giáo dục",
+        "slogan": "Tham gia cùng hàng nghìn học sinh và giáo viên trong việc tạo ra những trải nghiệm giáo dục tuyệt vời. Bắt đầu hành trình của bạn ngay hôm nay với nền tảng học tập toàn diện của chúng tôi.",
+        "subtitle": "Biến đổi Giáo dục, Chỉ với Một Cú Click"
     },
     "placeholders": {
         "sort": "Sắp xếp",
         "search": "Tìm kiếm",
-        "searchClass": "Tìm lớp"
+        "searchClass": "Tìm lớp",
+        "enterEmail": "Nhập email của bạn",
+        "enterPassword": "Nhập mật khẩu",
+        "repeatPassword": "Nhập lại mật khẩu",
+        "enterFullName": "Nhập họ và tên",
+        "selectRole": "Chọn vai trò",
+        "selectCity": "Chọn tỉnh/thành phố",
+        "enterSchool": "Nhập trường hoặc tổ chức"
     },
     "actions": {
         "findClass": "Tìm lớp"

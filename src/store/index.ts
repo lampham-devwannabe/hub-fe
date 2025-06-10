@@ -1,19 +1,29 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import authReducer from './slices/authSlice'
 import localeReducer from './slices/localeSlice'
+import testReducer from './slices/testSlice'
+import classReducer from './slices/classSlice'
+import attemptReducer from './slices/attemptSlice'
+import resourceReducer from './slices/resourceSlice'
+import paymentReducer from './slices/paymentSlice'
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  locale: localeReducer
+  locale: localeReducer,
+  test: testReducer,
+  class: classReducer,
+  attempt: attemptReducer,
+  resource: resourceReducer,
+  payment: paymentReducer
 })
 
 // Persist config
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'locale'] // Name of reducers
+  whitelist: ['auth', 'locale', 'class', 'test', 'attempt', 'payment'] // Name of reducers
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

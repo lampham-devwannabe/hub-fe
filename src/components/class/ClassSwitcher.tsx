@@ -1,10 +1,24 @@
 import React from 'react'
 import { Check, ChevronsUpDown, GalleryVerticalEnd } from 'lucide-react'
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '../../ui/sidebar'
-import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuContent } from '../../ui/dropdown-menu'
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '../ui/sidebar'
+import { DropdownMenu, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuContent } from '../ui/dropdown-menu'
+import { useNavigate } from 'react-router-dom'
+import { GeneralClassInfo } from '../../store/slices/classSlice'
 
-export function ClassSwitcher({ versions, defaultVersion }: { versions: string[]; defaultVersion: string }) {
-  const [selectedVersion, setSelectedVersion] = React.useState(defaultVersion)
+export function ClassSwitcher({
+  classes,
+  currentClass
+}: {
+  classes: GeneralClassInfo[]
+  currentClass: GeneralClassInfo
+}) {
+  const [selectedClass, setSelectedClass] = React.useState(currentClass)
+  const navigate = useNavigate()
+
+  const handleClassChange = (classItem: GeneralClassInfo) => {
+    setSelectedClass(classItem)
+    navigate(`/class/${classItem.classId}`)
+  }
 
   return (
     <SidebarMenu>
@@ -19,16 +33,16 @@ export function ClassSwitcher({ versions, defaultVersion }: { versions: string[]
                 <GalleryVerticalEnd className='size-4' />
               </div>
               <div className='flex flex-col gap-0.5 leading-none'>
-                <span className='font-semibold'>Documentation</span>
-                <span className=''>v{selectedVersion}</span>
+                <span className='font-semibold'>Current Class</span>
+                <span className=''>{selectedClass.name}</span>
               </div>
               <ChevronsUpDown className='ml-auto' />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent className='w-[--radix-dropdown-menu-trigger-width]' align='start'>
-            {versions.map((version) => (
-              <DropdownMenuItem key={version} onSelect={() => setSelectedVersion(version)}>
-                v{version} {version === selectedVersion && <Check className='ml-auto' />}
+            {classes.map((classItem) => (
+              <DropdownMenuItem key={classItem.classId} onSelect={() => handleClassChange(classItem)}>
+                {classItem.name} {classItem.classId === selectedClass.classId && <Check className='ml-auto' />}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>

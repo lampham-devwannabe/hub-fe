@@ -14,11 +14,11 @@ export const ProtectedRoute = ({ teacherView, studentView }: ProtectedRouteProps
     return <Navigate to='/login' replace />
   }
 
-  if (user?.role === 'Teacher') {
+  if (user?.role === 'TEACHER') {
     return <>{teacherView}</>
   }
 
-  if (user?.role === 'Student') {
+  if (user?.role === 'STUDENT') {
     return <>{studentView}</>
   }
 
