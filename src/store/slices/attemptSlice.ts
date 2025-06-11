@@ -75,6 +75,7 @@ export interface TestMonitorResponse {
 interface AttemptState {
   currentAttempt: TestAttempt | null
   loading: boolean
+  startLoading: boolean
   error: string | null
   monitoredAttempts: TestMonitorResponse[]
 }
@@ -82,6 +83,7 @@ interface AttemptState {
 const initialState: AttemptState = {
   currentAttempt: null,
   loading: false,
+  startLoading: false,
   error: null,
   monitoredAttempts: []
 }
@@ -356,15 +358,15 @@ const attemptSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(startTestAttempt.pending, (state) => {
-        state.loading = true
+        state.startLoading = true
         state.error = null
       })
       .addCase(startTestAttempt.fulfilled, (state, action: PayloadAction<TestAttempt>) => {
-        state.loading = false
+        state.startLoading = false
         state.currentAttempt = action.payload
       })
       .addCase(startTestAttempt.rejected, (state, action) => {
-        state.loading = false
+        state.startLoading = false
         state.error = action.payload as string
       })
       .addCase(handleLostFocus.pending, (state) => {

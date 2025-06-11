@@ -5,6 +5,7 @@ import { ProtectedRoute } from '../ProtectedRoute'
 import EditTestPage from '../../pages/Test/EditTestPage'
 import { TestView } from '../../pages/Test/TestView'
 import TestDetailPage from '../../pages/Test/TestDetailPage'
+import ClassMemberView from '../../pages/Class/ClassMemberView'
 
 export function ClassRoutes() {
   return (
@@ -26,6 +27,7 @@ export function ClassRoutes() {
         path='test/:id/detail'
         element={<ProtectedRoute teacherView={<TestDetailPage />} studentView={<Navigate to='/unauthorized' />} />}
       />
+      <Route path='/members' element={<ClassMemberView />} />
     </Routes>
   )
 }

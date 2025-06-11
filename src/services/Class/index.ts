@@ -56,7 +56,7 @@ export const generateClassCode = (): string => {
 }
 
 export const getClassMembers = async (classId: string): Promise<ApiResponse<ClassMemberResponse[]>> => {
-  const response = await api.get(`/members?classId=${classId}`)
+  const response = await api.get(`/class/members?classId=${classId}`)
   return response.data
 }
 

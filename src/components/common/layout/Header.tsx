@@ -16,8 +16,8 @@ export const Header = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch<AppDispatch>()
 
-  // Mock student count - replace with actual data from your store/API
-  const currentStudentCount = 45
+  // Get student count from teacher user data
+  const currentStudentCount = currentUser?.role === 'TEACHER' ? currentUser.studentCount : 0
 
   const getStudentLimit = (priceClass: string | number) => {
     const priceClassStr = String(priceClass)?.toLowerCase()

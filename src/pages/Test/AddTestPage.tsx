@@ -2,14 +2,40 @@ import { useState, useEffect } from 'react'
 import { Upload, BookOpen, FileText, Headphones, PenTool, Plus, Search } from 'lucide-react'
 import { TestType } from '../../store/slices/testSlice'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchExistingTests } from '../../store/slices/testSlice'
+import { fetchExistingTests, importTestAction } from '../../store/slices/testSlice'
 import { AppDispatch, RootState } from '../../store'
+import { showToast } from '../../components/common/toast/Toast'
 
-const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>, testType: TestType, dispatch: AppDispatch) => {
   const file = event.target.files?.[0]
   if (file && file.type === 'application/pdf') {
-    console.log('PDF uploaded:', file.name)
-    // Handle PDF upload logic here
+    if (testType === TestType.WRITING) {
+      dispatch(importTestAction({ file, testType }))
+        .unwrap()
+        .then(() => {
+          showToast('Writing test imported successfully', {
+            variant: 'success',
+            duration: 3000
+          })
+        })
+        .catch((error) => {
+          showToast(`Failed to import writing test: ${error instanceof Error ? error.message : 'Unknown error'}`, {
+            variant: 'error',
+            duration: 3000
+          })
+        })
+    } else {
+      // For Reading and Listening tests, just show success toast
+      showToast(`${testType} test created successfully`, {
+        variant: 'success',
+        duration: 3000
+      })
+    }
+  } else {
+    showToast('Please upload a PDF file', {
+      variant: 'error',
+      duration: 3000
+    })
   }
 }
 
@@ -35,21 +61,11 @@ const ExamCreator = () => {
 
   const handleCreateExam = () => {
     if (activeTab === 'import') {
-      handleCreateFromPDF()
+      // Trigger file input click
+      document.getElementById('pdf-upload')?.click()
     } else {
       handleCreateFromExisting()
     }
-  }
-
-  const handleCreateFromPDF = () => {
-    console.log('Creating exam from PDF import')
-    console.log('Test Type:', selectedTestType)
-    // Add your PDF import exam creation logic here
-    // This could include:
-    // - Processing the uploaded PDF
-    // - Extracting content based on test type
-    // - Creating exam structure
-    // - Navigating to exam builder
   }
 
   const handleCreateFromExisting = () => {
@@ -160,7 +176,7 @@ const ExamCreator = () => {
                 <input
                   type='file'
                   accept='.pdf'
-                  onChange={handleFileUpload}
+                  onChange={(e) => handleFileUpload(e, selectedTestType, dispatch)}
                   className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
                   id='pdf-upload'
                 />

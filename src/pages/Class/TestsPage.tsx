@@ -19,7 +19,7 @@ export function TestsPage() {
   const dispatch = useDispatch<AppDispatch>()
   const { user } = useSelector((state: RootState) => state.auth)
   const { generalTestAttempt, generalClass, loading } = useSelector((state: RootState) => state.class)
-  const { currentAttempt, loading: attemptLoading } = useSelector((state: RootState) => state.attempt)
+  const { currentAttempt, startLoading } = useSelector((state: RootState) => state.attempt)
   const [selectedTest, setSelectedTest] = useState<GeneralTestAttemptResponse | null>(null)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [isStartingTest, setIsStartingTest] = useState(false)
@@ -91,10 +91,23 @@ export function TestsPage() {
             </div>
             <div className='flex justify-between items-center'>
               <h2 className='text-lg font-semibold'>{mode === 'student' ? 'My Tests' : 'Class Tests'}</h2>
-              <Button variant='outline' size='sm'>
-                <Filter className='w-4 h-4 mr-2' />
-                Latest
-              </Button>
+              <div className='flex gap-2'>
+                {mode === 'teacher' && (
+                  <Button
+                    variant='default'
+                    size='sm'
+                    onClick={() => navigate(`/class/${classId}/add-test`)}
+                    className='flex items-center gap-2'
+                  >
+                    <BookOpen className='w-4 h-4' />
+                    Add Test
+                  </Button>
+                )}
+                <Button variant='outline' size='sm'>
+                  <Filter className='w-4 h-4 mr-2' />
+                  Latest
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -241,11 +254,11 @@ export function TestsPage() {
                           variant='default'
                           size='sm'
                           onClick={() => handleTakeTest(selectedTest)}
-                          disabled={(selectedTest.attemptNumber && selectedTest.attemptNumber > 0) || attemptLoading}
+                          disabled={(selectedTest.attemptNumber && selectedTest.attemptNumber > 0) || startLoading}
                           className='flex items-center gap-2'
                         >
                           <Play className='w-4 h-4' />
-                          {attemptLoading ? 'Starting...' : 'Take Test'}
+                          {startLoading ? 'Starting...' : 'Take Test'}
                         </Button>
 
                         {selectedTest.attemptNumber && selectedTest.attemptNumber > 0 && (
@@ -271,6 +284,17 @@ export function TestsPage() {
                     <div className='space-y-2'>
                       <label className='text-sm font-medium text-muted-foreground'>Actions</label>
                       <div className='flex flex-wrap gap-2'>
+                        <Button
+                          variant='outline'
+                          size='sm'
+                          onClick={() =>
+                            selectedTest && navigate(`/class/${classId}/test/${selectedTest.testId}/detail`)
+                          }
+                          className='flex items-center gap-2'
+                        >
+                          <Eye className='w-4 h-4' />
+                          Detail
+                        </Button>
                         <Button
                           variant='outline'
                           size='sm'

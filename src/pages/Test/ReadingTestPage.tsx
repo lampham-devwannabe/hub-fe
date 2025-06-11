@@ -401,11 +401,11 @@ const ReadingTestPage = ({ testData }: { testData: Test }) => {
 
                 {/* Section Description/Content */}
                 {currentSection.description && (
-                  <div className='p-4 bg-blue-100 rounded-lg shadow-sm'>
+                  <div className='p-4 bg-blue-50 rounded-lg shadow-sm'>
                     <h3 className='text-lg font-semibold text-blue-800 mb-3'>Reading Passage</h3>
                     <div className='text-blue-900 leading-relaxed'>
                       {currentSection.description.split('\n').map((paragraph, index) => (
-                        <p key={index} className='mb-4 last:mb-0'>
+                        <p key={index} className='mb-4 last:mb-0 bg-white bg-opacity-50 p-3 rounded'>
                           {paragraph}
                         </p>
                       ))}

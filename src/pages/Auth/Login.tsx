@@ -41,12 +41,7 @@ export const Login = () => {
       const resultAction = await dispatch(login({ username: values.email, password: values.password }))
       if (login.fulfilled.match(resultAction)) {
         // Redirect based on user role
-        const user = resultAction.payload
-        if (user.role === 'TEACHER') {
-          navigate('/subscription')
-        } else {
-          navigate('/class')
-        }
+        navigate('/class')
       }
 
       if (login.rejected.match(resultAction)) {

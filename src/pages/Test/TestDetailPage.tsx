@@ -6,7 +6,7 @@ import { TestMonitorResponse } from '../../store/slices/attemptSlice'
 import { Button } from '../../components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table'
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card'
-import { Clock, Users, AlertTriangle, UserX, RotateCcw } from 'lucide-react'
+import { Clock, Users, AlertTriangle, UserX, RotateCcw, Play, Square } from 'lucide-react'
 import { showToast } from '../../components/common/toast/Toast'
 
 interface TestDetailPageProps {
@@ -97,7 +97,54 @@ const TestDetailPage: React.FC<TestDetailPageProps> = ({ testMonitorResponse }) 
   const { id: testId } = useParams<{ id: string }>()
   const [monitorData, setMonitorData] = useState<TestMonitorResponse[]>(testMonitorResponse || mockTestMonitorData)
   const [loading] = useState(false)
+  const [isSimulating, setIsSimulating] = useState(false)
+  const simulationInterval = useRef<NodeJS.Timeout | null>(null)
   const stompClient = useRef<Client | null>(null)
+
+  // Mock simulation function for Emma's exits
+  const startEmmaSimulation = () => {
+    if (isSimulating) {
+      if (simulationInterval.current) {
+        clearInterval(simulationInterval.current)
+      }
+      setIsSimulating(false)
+      showToast('Simulation stopped', { variant: 'info' })
+      return
+    }
+
+    setIsSimulating(true)
+    showToast("Starting simulation of Emma's exits", { variant: 'info' })
+
+    let exitCount = 0
+    simulationInterval.current = setInterval(
+      () => {
+        exitCount++
+        // Find Emma's attempt
+        const emmaAttempt = monitorData.find((attempt) => attempt.studentName === 'Emma Wilson')
+        if (emmaAttempt) {
+          setMonitorData((prev) =>
+            prev.map((attempt) =>
+              attempt.studentName === 'Emma Wilson' ? { ...attempt, leaving: exitCount } : attempt
+            )
+          )
+          showToast(`Student Emma Wilson just had left the exam. \nTime: ${exitCount}`, {
+            variant: 'warning',
+            duration: 4000
+          })
+        }
+      },
+      Math.floor(Math.random() * 5000) + 5000
+    ) // Random interval between 5-10 seconds
+  }
+
+  // Cleanup simulation on unmount
+  useEffect(() => {
+    return () => {
+      if (simulationInterval.current) {
+        clearInterval(simulationInterval.current)
+      }
+    }
+  }, [])
 
   // WebSocket connection setup
   useEffect(() => {
@@ -326,6 +373,24 @@ const TestDetailPage: React.FC<TestDetailPageProps> = ({ testMonitorResponse }) 
           <p className='text-gray-600 mt-1'>Monitor student progress and performance</p>
         </div>
         <div className='flex items-center space-x-4'>
+          <Button
+            onClick={startEmmaSimulation}
+            variant={isSimulating ? 'destructive' : 'outline'}
+            size='sm'
+            className='flex items-center space-x-2'
+          >
+            {isSimulating ? (
+              <>
+                <Square className='w-4 h-4' />
+                <span>Stop Simulation</span>
+              </>
+            ) : (
+              <>
+                <Play className='w-4 h-4' />
+                <span>Start Emma Simulation</span>
+              </>
+            )}
+          </Button>
           <div className='flex items-center space-x-2 text-sm text-gray-600'>
             <Users className='w-4 h-4' />
             <span>{monitorData.length} Students</span>

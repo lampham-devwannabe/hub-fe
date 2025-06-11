@@ -24,6 +24,7 @@ import StudentDashboard from './pages/Home/StudentDashboard'
 import SubscriptionPage from './pages/Subscription/SubscriptionPage'
 import PaymentSuccessPage from './pages/Payment/PaymentSuccessPage'
 import PaymentCancelPage from './pages/Payment/PaymentCancelPage'
+import TestOverviewDashboard from './pages/Test/TestOverView'
 
 const LocaleSync = () => {
   const language = useSelector((state: RootState) => state.locale.language)
@@ -403,6 +404,7 @@ export const App = () => {
                     />
                   }
                 />
+                <Route path='/test-overview' element={<TestOverviewDashboard />} />
                 <Route path='/test-detail' element={<TestDetailPage />} />
                 <Route path='*' element={<div>404 Not Found</div>} />
               </Routes>
