@@ -1,16 +1,14 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import { Trash2 } from 'lucide-react'
 import { AppDispatch, RootState } from '../../store'
 import { getClassMembersThunk, deleteMemberThunk } from '../../store/slices/classSlice'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '../../components/ui/table'
 import { Button } from '../../components/ui/button'
 
-interface ClassMemberViewProps {
-  classId: string
-}
-
-const ClassMemberView: React.FC<ClassMemberViewProps> = ({ classId }) => {
+const ClassMemberView: React.FC = () => {
+  const { classId } = useParams<{ classId: string }>()
   const dispatch = useDispatch<AppDispatch>()
   const { classMembers, loading, error } = useSelector((state: RootState) => state.class)
 
@@ -21,9 +19,17 @@ const ClassMemberView: React.FC<ClassMemberViewProps> = ({ classId }) => {
   }, [dispatch, classId])
 
   const handleDeleteMember = (studentId: string) => {
-    if (window.confirm('Are you sure you want to remove this student from the class?')) {
+    if (classId && window.confirm('Are you sure you want to remove this student from the class?')) {
       dispatch(deleteMemberThunk({ classId, studentId }))
     }
+  }
+
+  if (!classId) {
+    return (
+      <div className='flex items-center justify-center py-8'>
+        <div className='text-red-500'>Error: Class ID not found in URL</div>
+      </div>
+    )
   }
 
   if (loading) {

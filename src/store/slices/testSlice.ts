@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { getTestById, getExistingTests, editTest, EditTestRequest } from '../../services/Test'
+import { getTestById, getExistingTests, editTest, EditTestRequest, importTest } from '../../services/Test'
 
 export interface Answer {
   answerId: number
@@ -127,6 +127,30 @@ export const saveTest = createAsyncThunk('test/saveTest', async (editRequest: Ed
   }
 })
 
+export interface ImportTestParams {
+  file: File
+  testType: string
+}
+
+export const importTestAction = createAsyncThunk(
+  'test/import',
+  async ({ file, testType }: ImportTestParams, { rejectWithValue }) => {
+    try {
+      const response = await importTest(file, testType)
+      if (response.code !== 1000) {
+        return rejectWithValue(response.message || 'Failed to import test')
+      }
+      return response.result
+    } catch (error) {
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } }; message?: string }).response?.data?.message ||
+        (error as { message?: string }).message ||
+        'Unknown error'
+      return rejectWithValue(errorMessage)
+    }
+  }
+)
+
 interface TestState {
   currentTest: Test | null
   existingTests: Test[]
@@ -138,7 +162,7 @@ interface TestState {
 
 const initialState: TestState = {
   currentTest: null,
-  existingTests: [],
+  existingTests: [],  
   loading: false,
   error: null,
   saving: false,
@@ -328,6 +352,18 @@ const testSlice = createSlice({
       })
       .addCase(saveTest.rejected, (state, action) => {
         state.saving = false
+        state.error = action.payload as string
+      })
+      .addCase(importTestAction.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(importTestAction.fulfilled, (state, action: PayloadAction<Test>) => {
+        state.loading = false
+        state.currentTest = action.payload
+      })
+      .addCase(importTestAction.rejected, (state, action) => {
+        state.loading = false
         state.error = action.payload as string
       })
   }

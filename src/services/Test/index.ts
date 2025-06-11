@@ -30,3 +30,15 @@ export const editTest = async (request: EditTestRequest): Promise<ApiResponse<st
   const response = await api.put('/test/edit', request)
   return response.data
 }
+
+export const importTest = async (file: File, testType: string): Promise<ApiResponse<Test>> => {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const response = await api.post(`/test/general/import?testType=${testType}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  return response.data
+}
