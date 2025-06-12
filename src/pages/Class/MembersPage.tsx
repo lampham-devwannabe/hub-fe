@@ -15,7 +15,7 @@ export function MembersPage() {
 
   return (
     <div className='p-4'>
-      <ClassMemberView classId={classId} />
+      <ClassMemberView />
     </div>
   )
 }
