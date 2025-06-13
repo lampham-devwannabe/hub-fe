@@ -41,9 +41,6 @@ export const Login = () => {
     try {
       const resultAction = await dispatch(login({ username: values.email, password: values.password }))
       if (login.fulfilled.match(resultAction)) {
-        // Check for plan parameter and user role for redirection
-        const plan = searchParams.get('plan')
-        const userRole = resultAction.payload?.role
 
         if (plan === 'advanced' && userRole === 'TEACHER') {
           navigate('/subscription')
