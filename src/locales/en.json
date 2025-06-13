@@ -50,7 +50,24 @@
         "welcome": "Welcome to the Future of Learning",
         "slogan": "Join thousands of students and teachers in creating amazing educational experiences. Start your journey today with our comprehensive learning platform.",
         "subtitle": "Transform Education, One Click at a Time",
-        "tests": "Tests"
+        "tests": "Tests",
+        "demoPopup": {
+            "title": "Schedule Demo",
+            "subtitle": "Enter your email to schedule a product demo",
+            "emailLabel": "Customer Email *",
+            "emailPlaceholder": "email@example.com",
+            "noteLabel": "Note",
+            "notePlaceholder": "Add notes about your demo request...",
+            "submitButton": "Schedule Demo",
+            "submittingButton": "Sending...",
+            "successTitle": "Registration Successful!",
+            "successMessage": "We have received your demo request. Our team will contact you soon.",
+            "scheduleAnother": "Schedule Another Demo",
+            "terms": "By registering, you agree to our terms of service",
+            "invalidEmail": "Invalid email address",
+            "emailRequired": "Please enter your email",
+            "close": "Close"
+        }
     },
     "placeholders": {
         "sort": "Sort based on",

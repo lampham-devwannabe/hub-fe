@@ -72,6 +72,17 @@ export interface TestMonitorResponse {
   status: string
 }
 
+export interface StudentEssayResponse {
+  testAttempt: TestAttempt
+  responses: WritingResponse[]
+}
+
+export interface GeneralStudentEssayResponse {
+  id: string
+  name: string
+  attemptId: string
+}
+
 interface AttemptState {
   currentAttempt: TestAttempt | null
   loading: boolean

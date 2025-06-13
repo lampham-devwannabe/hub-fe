@@ -51,7 +51,24 @@
         "welcome": "Chào mừng đến với Tương lai của Giáo dục",
         "slogan": "Tham gia cùng hàng nghìn học sinh và giáo viên trong việc tạo ra những trải nghiệm giáo dục tuyệt vời. Bắt đầu hành trình của bạn ngay hôm nay với nền tảng học tập toàn diện của chúng tôi.",
         "subtitle": "Biến đổi Giáo dục, Chỉ với Một Cú Click",
-        "tests": "Bài kiểm tra"
+        "tests": "Bài kiểm tra",
+        "demoPopup": {
+            "title": "Đăng ký Demo",
+            "subtitle": "Nhập email để đăng ký demo sản phẩm",
+            "emailLabel": "Email khách hàng *",
+            "emailPlaceholder": "email@example.com",
+            "noteLabel": "Ghi chú",
+            "notePlaceholder": "Thêm ghi chú về yêu cầu demo...",
+            "submitButton": "Đăng ký Demo",
+            "submittingButton": "Đang gửi...",
+            "successTitle": "Đăng ký thành công!",
+            "successMessage": "Chúng tôi đã nhận được yêu cầu demo của bạn. Đội ngũ sẽ liên hệ với bạn sớm nhất.",
+            "scheduleAnother": "Đăng ký demo khác",
+            "terms": "Bằng cách đăng ký, bạn đồng ý với các điều khoản sử dụng của chúng tôi",
+            "invalidEmail": "Email không hợp lệ",
+            "emailRequired": "Vui lòng nhập email",
+            "close": "Đóng"
+        }
     },
     "placeholders": {
         "sort": "Sắp xếp",
