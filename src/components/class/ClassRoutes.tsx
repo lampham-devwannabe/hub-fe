@@ -6,6 +6,7 @@ import EditTestPage from '../../pages/Test/EditTestPage'
 import { TestView } from '../../pages/Test/TestView'
 import TestDetailPage from '../../pages/Test/TestDetailPage'
 import ClassMemberView from '../../pages/Class/ClassMemberView'
+import { WritingGradingView } from '../../pages/Test/WritingGradingView'
 
 export function ClassRoutes() {
   return (
@@ -26,6 +27,10 @@ export function ClassRoutes() {
       <Route
         path='test/:id/detail'
         element={<ProtectedRoute teacherView={<TestDetailPage />} studentView={<Navigate to='/unauthorized' />} />}
+      />
+      <Route
+        path='test/:id/grading'
+        element={<ProtectedRoute teacherView={<WritingGradingView />} studentView={<Navigate to='/unauthorized' />} />}
       />
       <Route path='/members' element={<ClassMemberView />} />
     </Routes>

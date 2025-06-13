@@ -222,6 +222,7 @@ const ReadingTestPage = ({ testData }: { testData: Test }) => {
           />
         )
       case 'note_completion':
+      case 'summary_completion':
         return (
           <NoteCompletion
             key={element.groupId}
@@ -251,6 +252,8 @@ const ReadingTestPage = ({ testData }: { testData: Test }) => {
             mode='exam'
           />
         )
+      case 'matching_headings':
+      case 'matching_features':
       case 'matching':
         return (
           <Matching

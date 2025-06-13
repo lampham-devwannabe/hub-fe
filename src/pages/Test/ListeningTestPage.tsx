@@ -235,6 +235,7 @@ const ListeningTestPage = ({ testData }: { testData: Test }) => {
           />
         )
       case 'note_completion':
+      case 'summary_completion':
         return (
           <NoteCompletion
             key={element.groupId}

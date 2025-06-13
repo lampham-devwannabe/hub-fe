@@ -59,10 +59,12 @@ const plans: PricingPlan[] = [
 
 // Generate random 6-digit number not starting with 0
 const generateOrderCode = (): number => {
+  console.log('generateOrderCode' + Math.floor(100000 + Math.random() * 900000))
   return Math.floor(100000 + Math.random() * 900000)
 }
 
 export default function SubscriptionPage() {
+  generateOrderCode()
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const { createLoading, createError } = useSelector((state: RootState) => state.payment)

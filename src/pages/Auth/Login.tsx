@@ -10,7 +10,7 @@ import { Input } from '../../components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react'
 import { GoogleLogin } from '@react-oauth/google'
@@ -24,6 +24,7 @@ export const Login = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [showPassword, setShowPassword] = useState(false)
   const [selectedRole, setSelectedRole] = useState<'STUDENT' | 'TEACHER'>('STUDENT')
 
@@ -40,8 +41,15 @@ export const Login = () => {
     try {
       const resultAction = await dispatch(login({ username: values.email, password: values.password }))
       if (login.fulfilled.match(resultAction)) {
-        // Redirect based on user role
-        navigate('/class')
+        // Check for plan parameter and user role for redirection
+        const plan = searchParams.get('plan')
+        const userRole = resultAction.payload?.role
+
+        if (plan === 'advanced' && userRole === 'TEACHER') {
+          navigate('/subscription')
+        } else {
+          navigate('/class')
+        }
       }
 
       if (login.rejected.match(resultAction)) {
@@ -83,11 +91,13 @@ export const Login = () => {
       // You might want to store the token and update auth state here
       localStorage.setItem('token', authResult.token)
 
-      // Redirect based on selected role
-      if (selectedRole === 'TEACHER') {
+      // Check for plan parameter and redirect accordingly
+      const plan = searchParams.get('plan')
+
+      if (plan === 'advanced' && selectedRole === 'TEACHER') {
         navigate('/subscription')
       } else {
-        navigate('/student-dashboard')
+        navigate('/class')
       }
     } catch (error) {
       console.error('Google authentication error:', error)

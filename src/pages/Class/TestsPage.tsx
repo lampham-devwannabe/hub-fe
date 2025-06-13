@@ -306,7 +306,13 @@ export function TestsPage() {
                           Delete
                         </Button>
                         {selectedTest.testType === 'WRITING' && (
-                          <Button variant='outline' size='sm'>
+                          <Button
+                            onClick={() =>
+                              selectedTest && navigate(`/class/${classId}/test/${selectedTest.testId}/grading`)
+                            }
+                            variant='outline'
+                            size='sm'
+                          >
                             Grading
                           </Button>
                         )}

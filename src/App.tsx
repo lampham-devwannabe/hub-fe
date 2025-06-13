@@ -394,7 +394,7 @@ export const App = () => {
                   element={<ProtectedRoute teacherView={<ClassDetailView />} studentView={<ClassDetailView />} />}
                 />
                 <Route path='/unauthorized' element={<Unauthorized />} />
-                <Route
+                {/* <Route
                   path='/writing-grading'
                   element={
                     <WritingGradingView
@@ -403,7 +403,7 @@ export const App = () => {
                       section={undefined}
                     />
                   }
-                />
+                /> */}
                 <Route path='/test-overview' element={<TestOverviewDashboard />} />
                 <Route path='/test-detail' element={<TestDetailPage />} />
                 <Route path='*' element={<div>404 Not Found</div>} />

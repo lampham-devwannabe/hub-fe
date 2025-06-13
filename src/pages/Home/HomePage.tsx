@@ -18,6 +18,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store'
+import DemoSchedulePopup from '../../components/DemoSchedulePopup'
 
 type Language = 'en' | 'vi'
 
@@ -304,6 +305,7 @@ const stats = [
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [language, setLanguage] = useState<Language>('en')
+  const [isDemoPopupOpen, setIsDemoPopupOpen] = useState(false)
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth)
   const t = translations[language]
 
@@ -473,7 +475,10 @@ export default function HomePage() {
                 <ArrowRight className='w-5 h-5' />
               </Link>
             )}
-            <button className='border border-gray-300 text-gray-700 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors flex items-center gap-2'>
+            <button
+              onClick={() => setIsDemoPopupOpen(true)}
+              className='border border-gray-300 text-gray-700 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors flex items-center gap-2'
+            >
               <Play className='w-5 h-5' /> {t.hero.watchDemo}
             </button>
           </div>
@@ -607,7 +612,7 @@ export default function HomePage() {
                   </ul>
 
                   <Link
-                    to={plan.highlight ? '/signup?plan=advanced' : '/signup?plan=free'}
+                    to={plan.highlight ? '/login?plan=advanced' : '/login?plan=free'}
                     className={`w-full py-4 px-8 rounded-lg font-semibold text-lg transition-colors ${
                       plan.highlight
                         ? 'bg-blue-600 text-white hover:bg-blue-700'
@@ -667,7 +672,10 @@ export default function HomePage() {
             <button className='bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors'>
               Start Free Trial
             </button>
-            <button className='border border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors flex items-center gap-2 justify-center'>
+            <button
+              onClick={() => setIsDemoPopupOpen(true)}
+              className='border border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors flex items-center gap-2 justify-center'
+            >
               <Mail className='w-5 h-5' />
               Schedule Demo
             </button>
@@ -695,6 +703,9 @@ export default function HomePage() {
           </div>
         </footer>
       </div>
+
+      {/* Demo Schedule Popup */}
+      <DemoSchedulePopup isOpen={isDemoPopupOpen} onClose={() => setIsDemoPopupOpen(false)} language={language} />
     </div>
   )
 }

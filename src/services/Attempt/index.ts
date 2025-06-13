@@ -1,4 +1,12 @@
-import { SaveProgressRequest, SaveQuestionRequest, TestAttempt, EditWritingRequest, TestMonitorResponse } from '../../store/slices/attemptSlice'
+import {
+  SaveProgressRequest,
+  SaveQuestionRequest,
+  TestAttempt,
+  EditWritingRequest,
+  TestMonitorResponse,
+  StudentEssayResponse,
+  GeneralStudentEssayResponse
+} from '../../store/slices/attemptSlice'
 import api, { ApiResponse } from '../../utils/api'
 
 export const startExam = async (testId: string): Promise<ApiResponse<TestAttempt>> => {
@@ -33,5 +41,15 @@ export const submitWritingFeedbacks = async (requests: EditWritingRequest[]): Pr
 
 export const getTestAttempts = async (testId: string): Promise<ApiResponse<TestMonitorResponse[]>> => {
   const response = await api.get(`/exam/monitor?testId=${testId}`)
+  return response.data
+}
+
+export const getStudentEssayResponse = async (attemptId: string): Promise<ApiResponse<StudentEssayResponse>> => {
+  const response = await api.get(`/exam/essay/feedback?attemptId=${attemptId}`)
+  return response.data
+}
+
+export const getStudentsByTestId = async (testId: string): Promise<ApiResponse<GeneralStudentEssayResponse[]>> => {
+  const response = await api.get(`/exam/essay/students?testId=${testId}`)
   return response.data
 }
