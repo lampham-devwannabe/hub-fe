@@ -45,6 +45,7 @@
     "@stomp/stompjs": "^7.1.1",
     "@tailwindcss/vite": "^4.1.3",
     "@types/sockjs-client": "^1.5.4",
+    "@vercel/analytics": "^1.5.0",
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

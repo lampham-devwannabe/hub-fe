@@ -25,6 +25,7 @@ import SubscriptionPage from './pages/Subscription/SubscriptionPage'
 import PaymentSuccessPage from './pages/Payment/PaymentSuccessPage'
 import PaymentCancelPage from './pages/Payment/PaymentCancelPage'
 import TestOverviewDashboard from './pages/Test/TestOverView'
+import { Analytics } from '@vercel/analytics/react'
 
 const LocaleSync = () => {
   const language = useSelector((state: RootState) => state.locale.language)
@@ -409,6 +410,7 @@ export const App = () => {
                 <Route path='*' element={<div>404 Not Found</div>} />
               </Routes>
               <Toaster />
+              <Analytics />
             </BrowserRouter>
           </I18nextProvider>
         </PersistGate>
