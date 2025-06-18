@@ -28,6 +28,7 @@ import PaymentSuccessPage from './pages/Payment/PaymentSuccessPage'
 import PaymentCancelPage from './pages/Payment/PaymentCancelPage'
 import TestOverviewDashboard from './pages/Test/TestOverView'
 import { SubscriptionDashboard } from './pages/Admin/SubscriptionDashboard'
+import { Analytics } from '@vercel/analytics/react'
 
 const LocaleSync = () => {
   const language = useSelector((state: RootState) => state.locale.language)
@@ -88,14 +89,14 @@ const LocaleSync = () => {
 //   supportingTexts: []
 // }
 
-// // Mock WritingResponse data for demonstration
+// Mock WritingResponse data for demonstration
 // const mockWritingResponses: WritingResponse[] = [
 //   // Student 1 - Task 1 Response
 //   {
 //     responseId: 'wr1-t1',
 //     attemptId: 'att1',
 //     questionId: 1,
-//     originalText: `The chart shows the number of men and women in further education in Britain in three periods. 
+//     originalText: `The chart shows the number of men and women in further education in Britain in three periods.
 
 // In 1970/71, there were significantly more men than women studying. Men studying full-time was around 1000 thousand, while women was only about 200 thousand. For part-time study, men was about 800 thousand and women was around 600 thousand.
 
@@ -430,6 +431,7 @@ export const App = () => {
                 <Route path='*' element={<div>404 Not Found</div>} />
               </Routes>
               <Toaster />
+              <Analytics />
             </BrowserRouter>
           </I18nextProvider>
         </PersistGate>
