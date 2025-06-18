@@ -34,7 +34,14 @@ export const AdminLogin = () => {
     try {
       const resultAction = await dispatch(login({ username: values.email, password: values.password }))
       if (login.fulfilled.match(resultAction)) {
-        navigate('/admin/dashboard')
+        const user = resultAction.payload
+        // Check if user has admin role
+        if (user?.role === 'ADMIN') {
+          navigate('/admin/dashboard')
+        } else {
+          // If not admin, redirect to unauthorized page
+          navigate('/admin/unauthorized')
+        }
       }
 
       if (login.rejected.match(resultAction)) {

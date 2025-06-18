@@ -59,7 +59,7 @@ const plans: PricingPlan[] = [
 
 // Generate random 6-digit number not starting with 0
 const generateOrderCode = (): number => {
-  console.log('generateOrderCode' + Math.floor(100000 + Math.random() * 900000))
+  // console.log('generateOrderCode' + Math.floor(100000 + Math.random() * 900000))
   return Math.floor(100000 + Math.random() * 900000)
 }
 
@@ -75,22 +75,34 @@ export default function SubscriptionPage() {
     setSelectedPlan(plan.id)
 
     const orderCode = generateOrderCode()
-    const baseUrl = window.location.origin
+
+    // Since backend prepends BASE_URL, we only need relative paths
+    const returnUrl = `/payment/success?orderCode=${orderCode}`
+    const cancelUrl = `/payment/cancel?orderCode=${orderCode}`
+
+    // Debug: Log the URLs being sent
+    console.log('Payment URLs:', {
+      returnUrl,
+      cancelUrl,
+      orderCode
+    })
 
     const orderRequest: OrderRequest = {
       orderCode,
       amount: plan.price,
-      description: `${plan.name} ${user?.name || 'Teacher'})`,
-      returnUrl: `${baseUrl}/payment/success?orderCode=${orderCode}`,
-      cancelUrl: `${baseUrl}/payment/cancel?orderCode=${orderCode}`
+      description: `${plan.name} ${user?.name || 'Teacher'}`,
+      returnUrl,
+      cancelUrl
     }
 
     try {
       const result = await dispatch(createPayment(orderRequest))
 
       if (createPayment.fulfilled.match(result)) {
-        // Redirect to payment checkout URL
-        window.location.href = result.payload.checkoutUrl
+        // Add a small delay to ensure the payment is properly created before redirecting
+        setTimeout(() => {
+          window.location.href = result.payload.checkoutUrl
+        }, 100)
       }
     } catch (error) {
       console.error('Payment creation failed:', error)

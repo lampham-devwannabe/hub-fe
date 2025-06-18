@@ -57,10 +57,10 @@ export default function PaymentCancelPage() {
           <h1 className='text-xl font-semibold text-gray-900 mb-2'>Invalid Payment Link</h1>
           <p className='text-gray-600 mb-6'>No order code found in the URL.</p>
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/class')}
             className='bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors'
           >
-            Go to Dashboard
+            Go to Class
           </button>
         </div>
       </div>
