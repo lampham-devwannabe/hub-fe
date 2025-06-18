@@ -673,7 +673,12 @@ export default function HomePage() {
               Start Free Trial
             </button>
             <button
-              onClick={() => setIsDemoPopupOpen(true)}
+              onClick={() =>
+                window.open(
+                  'https://docs.google.com/forms/d/16wFHcvd4ahbNloYkcPfL7gSYQMEHN-lIYuTWAFZvIkU/viewform?edit_requested=true',
+                  '_blank'
+                )
+              }
               className='border border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors flex items-center gap-2 justify-center'
             >
               <Mail className='w-5 h-5' />
