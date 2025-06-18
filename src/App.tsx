@@ -375,7 +375,7 @@ export const App = () => {
                     </AdminProtectedRoute>
                   }
                 />
-                 <Route
+                <Route
                   path='/admin/subscriptions'
                   element={
                     <AdminProtectedRoute>
