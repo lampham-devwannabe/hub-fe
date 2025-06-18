@@ -6,6 +6,8 @@ import classReducer from './slices/classSlice'
 import attemptReducer from './slices/attemptSlice'
 import resourceReducer from './slices/resourceSlice'
 import paymentReducer from './slices/paymentSlice'
+import accountReducer from './slices/accountSlice'
+import subscriptionReducer from './slices/subscriptionSlice'
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
@@ -16,14 +18,16 @@ const rootReducer = combineReducers({
   class: classReducer,
   attempt: attemptReducer,
   resource: resourceReducer,
-  payment: paymentReducer
+  payment: paymentReducer,
+  account: accountReducer,
+  subscription: subscriptionReducer
 })
 
 // Persist config
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'locale', 'class', 'test', 'attempt', 'payment'] // Name of reducers
+  whitelist: ['auth', 'locale', 'class', 'test', 'attempt', 'payment', 'account', 'subscription'] // Name of reducers
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

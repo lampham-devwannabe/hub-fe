@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { CheckCircle, CreditCard, Calendar, DollarSign, FileText, Loader, ArrowRight, RefreshCw } from 'lucide-react'
@@ -15,14 +15,15 @@ export default function PaymentSuccessPage() {
 
   const [updateCompleted, setUpdateCompleted] = useState(false)
 
+  const updateCalledRef = useRef(false)
+
   useEffect(() => {
-    if (orderCode) {
+    if (orderCode && !updateCalledRef.current) {
+      updateCalledRef.current = true
+
       const orderCodeNum = parseInt(orderCode)
 
-      // Fetch payment details
       dispatch(getPayment(orderCodeNum))
-
-      // Update payment status
       dispatch(updatePayment(orderCodeNum)).then(() => {
         setUpdateCompleted(true)
       })
@@ -31,6 +32,7 @@ export default function PaymentSuccessPage() {
 
   const handleRefreshPayment = () => {
     if (orderCode) {
+      // Only refresh payment details, don't update payment status again
       dispatch(getPayment(parseInt(orderCode)))
     }
   }
@@ -62,10 +64,10 @@ export default function PaymentSuccessPage() {
           <h1 className='text-xl font-semibold text-gray-900 mb-2'>Invalid Payment Link</h1>
           <p className='text-gray-600 mb-6'>No order code found in the URL.</p>
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/class')}
             className='bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors'
           >
-            Go to Dashboard
+            Go to Class
           </button>
         </div>
       </div>
@@ -258,10 +260,10 @@ export default function PaymentSuccessPage() {
         {/* Action Buttons */}
         <div className='flex flex-col sm:flex-row gap-4 justify-center mt-12'>
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/class')}
             className='bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2 justify-center'
           >
-            Go to Dashboard
+            Go to Class
             <ArrowRight className='w-5 h-5' />
           </button>
 

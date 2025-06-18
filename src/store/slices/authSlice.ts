@@ -20,7 +20,11 @@ interface Student extends BaseUser {
   role: 'STUDENT'
 }
 
-export type User = Teacher | Student
+interface Admin extends BaseUser {
+  role: 'ADMIN'
+}
+
+export type User = Teacher | Student | Admin
 
 interface AuthState {
   user: User | null
@@ -54,6 +58,13 @@ export const login = createAsyncThunk(
           email: profileResponse.email,
           priceClass: profileResponse.priceClass,
           studentCount: profileResponse.studentCount
+        }
+      } else if (profileResponse.role === 'ADMIN') {
+        user = {
+          id: profileResponse.id,
+          role: 'ADMIN',
+          name: profileResponse.name,
+          email: profileResponse.email
         }
       } else {
         user = {
@@ -123,6 +134,13 @@ export const refreshAuth = createAsyncThunk('auth/refreshAuth', async (_, { reje
         email: profileResponse.email,
         priceClass: profileResponse.priceClass,
         studentCount: profileResponse.studentCount
+      }
+    } else if (profileResponse.role === 'ADMIN') {
+      user = {
+        id: profileResponse.id,
+        role: 'ADMIN',
+        name: profileResponse.name,
+        email: profileResponse.email
       }
     } else {
       user = {

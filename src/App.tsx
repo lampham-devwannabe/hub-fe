@@ -4,9 +4,11 @@ import { Provider, useSelector } from 'react-redux'
 import i18n from './utils/i18n'
 import { persistor, RootState, store } from './store'
 import { I18nextProvider } from 'react-i18next'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ProtectedRoute } from './components/ProtectedRoute'
+import { AdminProtectedRoute } from './components/AdminProtectedRoute'
 import { AdminLogin } from './pages/Auth/AdminLogin'
+import { UserDashboard } from './pages/Admin/UserDashboard'
 import { Unauthorized } from './pages/Auth/Unauthorized'
 import { StudentClassView } from './pages/Class/StudentClassView'
 import { TeacherClassView } from './pages/Class/TeacherClassView'
@@ -25,6 +27,7 @@ import SubscriptionPage from './pages/Subscription/SubscriptionPage'
 import PaymentSuccessPage from './pages/Payment/PaymentSuccessPage'
 import PaymentCancelPage from './pages/Payment/PaymentCancelPage'
 import TestOverviewDashboard from './pages/Test/TestOverView'
+import { SubscriptionDashboard } from './pages/Admin/SubscriptionDashboard'
 import { Analytics } from '@vercel/analytics/react'
 
 const LocaleSync = () => {
@@ -363,7 +366,25 @@ export const App = () => {
               <LocaleSync />
               <Routes>
                 <Route path='/' element={<HomePage />} />
-                <Route path='/admin-login' element={<AdminLogin />} />
+                <Route path='/admin/login' element={<AdminLogin />} />
+                <Route
+                  path='/admin/dashboard'
+                  element={
+                    <AdminProtectedRoute>
+                      <UserDashboard />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route
+                  path='/admin/subscriptions'
+                  element={
+                    <AdminProtectedRoute>
+                      <SubscriptionDashboard />
+                    </AdminProtectedRoute>
+                  }
+                />
+                <Route path='/admin/unauthorized' element={<Unauthorized />} />
+                <Route path='/admin-login' element={<Navigate to='/admin/login' replace />} />
                 <Route path='/login' element={<Login />} />
                 <Route path='/register' element={<Register />} />
                 <Route path='/student-dashboard' element={<StudentDashboard />} />
