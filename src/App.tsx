@@ -29,6 +29,9 @@ import PaymentCancelPage from './pages/Payment/PaymentCancelPage'
 import TestOverviewDashboard from './pages/Test/TestOverView'
 import { SubscriptionDashboard } from './pages/Admin/SubscriptionDashboard'
 import { Analytics } from '@vercel/analytics/react'
+import TeacherInstruction from './pages/Instructions/TeacherInstruction'
+import StudentInstruction from './pages/Instructions/StudentInstruction'
+import IeltsTips from './pages/Instructions/IeltsTips'
 
 const LocaleSync = () => {
   const language = useSelector((state: RootState) => state.locale.language)
@@ -387,6 +390,9 @@ export const App = () => {
                 <Route path='/admin-login' element={<Navigate to='/admin/login' replace />} />
                 <Route path='/login' element={<Login />} />
                 <Route path='/register' element={<Register />} />
+                <Route path='/instructions/teacher' element={<TeacherInstruction />} />
+                <Route path='/instructions/student' element={<StudentInstruction />} />
+                <Route path='/instructions/tips' element={<IeltsTips />} />
                 <Route path='/student-dashboard' element={<StudentDashboard />} />
                 <Route
                   path='/subscription'

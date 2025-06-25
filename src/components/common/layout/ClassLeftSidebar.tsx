@@ -1,4 +1,4 @@
-import { FileText, FolderOpen, LucideIcon, MessageSquare, SquareArrowLeft, Users } from 'lucide-react'
+import { FileText, FolderOpen, LucideIcon, SquareArrowLeft, Users } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -23,12 +23,12 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  {
-    id: 'news',
-    icon: MessageSquare,
-    labelKey: 'labels.news',
-    path: 'news'
-  },
+  // {
+  //   id: 'news',
+  //   icon: MessageSquare,
+  //   labelKey: 'labels.news',
+  //   path: 'news'
+  // },
   {
     id: 'members',
     icon: Users,

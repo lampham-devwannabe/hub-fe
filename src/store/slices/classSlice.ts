@@ -64,7 +64,13 @@ export const getGeneralTestAttempt = createAsyncThunk(
           testType: testAttempt.testType,
           durationMinutes: testAttempt.durationMinutes,
           createdAt: testAttempt.createdAt,
-          status: testAttempt.status
+          status: testAttempt.status,
+          attemptNumber: testAttempt.attemptNumber,
+          score: testAttempt.score,
+          totalTimeSpent: testAttempt.totalTimeSpent,
+          numberOfAttempts: testAttempt.numberOfAttempts,
+          averageScore: testAttempt.averageScore,
+          latestSubmission: testAttempt.latestSubmission
         })
       )
       return mappedResult

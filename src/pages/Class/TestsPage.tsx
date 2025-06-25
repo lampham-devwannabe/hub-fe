@@ -181,7 +181,7 @@ export function TestsPage() {
                           <div>
                             <label className='text-sm font-medium text-muted-foreground'>Score</label>
                             <p className='text-sm mt-1'>
-                              {selectedTest.score !== undefined ? `${selectedTest.score}/100` : 'N/A'}
+                              {selectedTest.score !== undefined ? `Band ${selectedTest.score}` : 'N/A'}
                             </p>
                           </div>
                           <div>
@@ -222,7 +222,7 @@ export function TestsPage() {
                         <label className='text-sm font-medium text-muted-foreground'>Average Score</label>
                         <p className='text-sm mt-1'>
                           {selectedTest.averageScore !== undefined
-                            ? `${selectedTest.averageScore.toFixed(1)}/100`
+                            ? `Band ${selectedTest.averageScore.toFixed(1)}`
                             : 'No submissions yet'}
                         </p>
                       </div>

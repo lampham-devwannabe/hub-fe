@@ -64,9 +64,9 @@ const TestCard = ({ test, mode, isSelected, onClick, studentCount }: TestCardPro
               <Clock className='w-4 h-4' />
               <span>{test.durationMinutes} min</span>
             </div>
-            {mode === 'student' && test.score !== undefined && <Badge variant='outline'>Score: {test.score}</Badge>}
+            {mode === 'student' && test.score !== undefined && <Badge variant='outline'>Band {test.score}</Badge>}
             {mode === 'teacher' && test.averageScore !== undefined && (
-              <Badge variant='outline'>Avg: {test.averageScore.toFixed(1)}</Badge>
+              <Badge variant='outline'>Avg Band {test.averageScore.toFixed(1)}</Badge>
             )}
           </div>
           <span>{new Date(test.createdAt).toLocaleDateString('en-US', { day: '2-digit', month: '2-digit' })}</span>

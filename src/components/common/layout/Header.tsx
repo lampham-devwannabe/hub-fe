@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { BookOpen, GlobeIcon, Users } from 'lucide-react'
+import { GlobeIcon, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { NotificationPopover } from '../elements/NotificationPopover'
 import { UserPopover } from '../elements/ProfilePopover'
@@ -8,6 +8,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Progress } from '../../ui/progress'
 import { setLanguage } from '../../../store/slices/localeSlice'
 import { useTranslation } from 'react-i18next'
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger
+} from '../../ui/navigation-menu'
 
 export const Header = () => {
   // Retrieve the current user and language from Redux store
@@ -18,6 +26,24 @@ export const Header = () => {
 
   // Get student count from teacher user data
   const currentStudentCount = currentUser?.role === 'TEACHER' ? currentUser.studentCount : 0
+
+  const instructionItems = [
+    {
+      title: language === 'en' ? 'For Teachers' : 'Dành cho Giáo viên',
+      description: language === 'en' ? 'Complete guide for educators' : 'Hướng dẫn đầy đủ cho giáo viên',
+      href: '/instructions/teacher'
+    },
+    {
+      title: language === 'en' ? 'For Students' : 'Dành cho Học viên',
+      description: language === 'en' ? 'Step-by-step student guide' : 'Hướng dẫn từng bước cho học viên',
+      href: '/instructions/student'
+    },
+    {
+      title: language === 'en' ? 'IELTS Tips' : 'Mẹo IELTS',
+      description: language === 'en' ? 'Expert tips and strategies' : 'Mẹo và chiến lược từ chuyên gia',
+      href: '/instructions/tips'
+    }
+  ]
 
   const getStudentLimit = (priceClass: string | number) => {
     const priceClassStr = String(priceClass)?.toLowerCase()
@@ -67,21 +93,44 @@ export const Header = () => {
     <header className='flex items-center justify-between px-4 py-2 border-b border-gray-300 bg-white'>
       {/* Left Side: Logo and Title */}
       <div className='flex items-center gap-2'>
-        <BookOpen className='h-6 w-6 text-purple-600' /> {/* Random icon; you can change later */}
-        <span className='text-lg font-semibold text-blue-800'>Title</span>
+        <img
+          src='https://res.cloudinary.com/du3922jvf/image/upload/v1750825320/53a82377-9484-4c08-b9b9-baca20617a2f.png'
+          alt='IeltsHub Logo'
+          className='h-6 w-6 rounded'
+        />
+        <span className='text-lg font-semibold text-blue-800'>IETLSHUB</span>
       </div>
 
       {/* Center: Navigation Links */}
-      <nav className='flex gap-20'>
-        <Link to='/general' className='text-gray-600 hover:text-blue-600 transition-colors'>
-          General
-        </Link>
+      <nav className='flex gap-20 items-center'>
         <Link to='/class' className='text-gray-600 hover:text-blue-600 transition-colors'>
           Class
         </Link>
-        <Link to='/instruction' className='text-gray-600 hover:text-blue-600 transition-colors'>
-          Instruction
-        </Link>
+
+        <NavigationMenu>
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger className='text-gray-600 hover:text-blue-600 transition-colors bg-transparent h-auto p-0 font-normal text-base'>
+                Instructions
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <div className='grid w-[400px] gap-3 p-4'>
+                  {instructionItems.map((item) => (
+                    <NavigationMenuLink key={item.href} asChild>
+                      <Link
+                        to={item.href}
+                        className='block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground'
+                      >
+                        <div className='text-sm font-medium leading-none'>{item.title}</div>
+                        <p className='line-clamp-2 text-sm leading-snug text-muted-foreground'>{item.description}</p>
+                      </Link>
+                    </NavigationMenuLink>
+                  ))}
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
       </nav>
 
       {/* Right Side: Teacher Info, Notification and User Popovers */}
