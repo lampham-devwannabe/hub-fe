@@ -41,6 +41,8 @@ const LocaleSync = () => {
   return null
 }
 
+// troll viet nam
+
 // Mock QuestionGroup for demonstration
 // const mockQuestionGroup: QuestionGroup = {
 //   groupId: 'wg1',
