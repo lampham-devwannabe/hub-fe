@@ -17,7 +17,7 @@ const mockPrepTests = [
     testType: 'Reading',
     title: 'Academic Reading Practice Test 1',
     description: 'Practice test focusing on various reading skills including skimming, scanning, and detailed reading.',
-    date: '2024-03-20',
+    date: '2024-07-21',
     time: '14:30'
   },
   {
@@ -25,15 +25,15 @@ const mockPrepTests = [
     testType: 'Writing',
     title: 'General Training Writing Test',
     description: 'Complete writing test with Task 1 (Letter) and Task 2 (Essay) components.',
-    date: '2024-03-21',
-    time: '10:00'
+    date: '2024-06-22',
+    time: '10:50'
   },
   {
     id: 3,
     testType: 'Listening',
     title: 'IELTS Listening Full Test',
     description: 'Full-length listening test covering all four sections with increasing difficulty.',
-    date: '2024-03-22',
+    date: '2024-02-07',
     time: '09:00'
   }
 ]
