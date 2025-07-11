@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { Client } from '@stomp/stompjs'
-import SockJS from 'sockjs-client'
-import { TestMonitorResponse } from '../../store/slices/attemptSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { TestMonitorResponse, fetchTestAttemptsMonitor } from '../../store/slices/attemptSlice'
+import { RootState, AppDispatch } from '../../store'
 import { Button } from '../../components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table'
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card'
@@ -11,19 +11,6 @@ import { showToast } from '../../components/common/toast/Toast'
 
 interface TestDetailPageProps {
   testMonitorResponse?: TestMonitorResponse[]
-}
-
-interface WebSocketMessage {
-  event: 'STARTED' | 'STUDENT_SUBMITTED' | 'STUDENT_LEFT' | 'TIME_UPDATE'
-  attemptId: string
-  studentName?: string
-  score?: number
-  start?: string
-  feedback?: string
-  duration?: string
-  leaving?: number
-  quitCount?: number
-  endTime?: string
 }
 
 // Mock data for demonstration (fallback when no Redux data)
@@ -95,11 +82,41 @@ const mockTestMonitorData: TestMonitorResponse[] = [
 
 const TestDetailPage: React.FC<TestDetailPageProps> = ({ testMonitorResponse }) => {
   const { id: testId } = useParams<{ id: string }>()
-  const [monitorData, setMonitorData] = useState<TestMonitorResponse[]>(testMonitorResponse || mockTestMonitorData)
-  const [loading] = useState(false)
+  const dispatch = useDispatch<AppDispatch>()
+
+  // Redux state
+  const { monitoredAttempts, loading, error } = useSelector((state: RootState) => state.attempt)
+
+  // Local state for simulation
+  const [monitorData, setMonitorData] = useState<TestMonitorResponse[]>([])
   const [isSimulating, setIsSimulating] = useState(false)
   const simulationInterval = useRef<NodeJS.Timeout | null>(null)
-  const stompClient = useRef<Client | null>(null)
+
+  // Initialize monitor data from Redux or props
+  useEffect(() => {
+    if (testMonitorResponse) {
+      setMonitorData(testMonitorResponse)
+    } else if (monitoredAttempts.length > 0) {
+      setMonitorData(monitoredAttempts)
+    } else {
+      // Fallback to mock data if no Redux data
+      setMonitorData(mockTestMonitorData)
+    }
+  }, [monitoredAttempts, testMonitorResponse])
+
+  // Fetch data from Redux store when component mounts
+  useEffect(() => {
+    if (testId && !testMonitorResponse) {
+      dispatch(fetchTestAttemptsMonitor(testId))
+    }
+  }, [testId, dispatch, testMonitorResponse])
+
+  // Handle Redux error
+  useEffect(() => {
+    if (error) {
+      showToast(`Error loading test data: ${error}`, { variant: 'error' })
+    }
+  }, [error])
 
   // Mock simulation function for Emma's exits
   const startEmmaSimulation = () => {
@@ -146,156 +163,6 @@ const TestDetailPage: React.FC<TestDetailPageProps> = ({ testMonitorResponse }) 
     }
   }, [])
 
-  // WebSocket connection setup
-  useEffect(() => {
-    if (!testId) return
-
-    // Create STOMP client with SockJS
-    const client = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
-      connectHeaders: {},
-      debug: (str) => {
-        console.log('STOMP Debug:', str)
-      },
-      reconnectDelay: 5000,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000
-    })
-
-    // Connection established
-    client.onConnect = (frame) => {
-      console.log('Connected to WebSocket:', frame)
-
-      // Subscribe to test-specific topic
-      client.subscribe(`/topic/monitor/test${testId}`, (message) => {
-        try {
-          const data: WebSocketMessage = JSON.parse(message.body)
-          handleWebSocketMessage(data)
-        } catch (error) {
-          console.error('Error parsing WebSocket message:', error)
-        }
-      })
-
-      showToast('Connected to live monitoring', { variant: 'info' })
-    }
-
-    // Connection error
-    client.onStompError = (frame) => {
-      console.error('STOMP Error:', frame)
-      showToast('Connection error - monitoring may be delayed', { variant: 'warning' })
-    }
-
-    // WebSocket connection error
-    client.onWebSocketError = (error) => {
-      console.error('WebSocket Error:', error)
-      showToast('WebSocket connection failed', { variant: 'error' })
-    }
-
-    // Activate connection
-    client.activate()
-    stompClient.current = client
-
-    // Cleanup on unmount
-    return () => {
-      if (stompClient.current) {
-        stompClient.current.deactivate()
-        console.log('WebSocket connection closed')
-      }
-    }
-  }, [testId])
-
-  // Handle different WebSocket message types
-  const handleWebSocketMessage = (data: WebSocketMessage) => {
-    console.log('Received WebSocket message:', data)
-
-    setMonitorData((prevData) => {
-      switch (data.event) {
-        case 'STARTED': {
-          // Add new student or update existing
-          const existingIndex = prevData.findIndex((item) => item.attemptId === data.attemptId)
-
-          if (existingIndex >= 0) {
-            // Update existing attempt
-            const updatedData = [...prevData]
-            updatedData[existingIndex] = {
-              ...updatedData[existingIndex],
-              startTime: data.start || updatedData[existingIndex].startTime,
-              duration: parseDurationToSeconds(data.duration || '0 minutes'),
-              leaving: data.leaving || 0,
-              feedback: data.feedback || updatedData[existingIndex].feedback,
-              status: 'in_progress'
-            }
-            showToast(`${data.studentName} started the test`, { variant: 'info' })
-            return updatedData
-          } else {
-            // Add new attempt
-            const newAttempt: TestMonitorResponse = {
-              attemptId: data.attemptId,
-              testName: prevData[0]?.testName || 'Test',
-              studentName: data.studentName || 'Unknown Student',
-              score: data.score || 0,
-              startTime: data.start || new Date().toISOString(),
-              feedback: data.feedback || 'Test in progress',
-              duration: parseDurationToSeconds(data.duration || '0 minutes'),
-              leaving: data.leaving || 0,
-              endTime: '',
-              status: 'in_progress'
-            }
-            showToast(`${data.studentName} joined the test`, { variant: 'info' })
-            return [...prevData, newAttempt]
-          }
-        }
-
-        case 'STUDENT_SUBMITTED':
-          showToast(`${data.studentName} submitted the test`, { variant: 'success' })
-          return prevData.map((item) =>
-            item.attemptId === data.attemptId
-              ? {
-                  ...item,
-                  score: data.score !== undefined ? data.score : item.score,
-                  feedback: data.feedback || item.feedback,
-                  endTime: data.endTime || new Date().toISOString(),
-                  status: 'completed'
-                }
-              : item
-          )
-
-        case 'STUDENT_LEFT': {
-          const newQuitCount = data.quitCount !== undefined ? data.quitCount : data.leaving || 0
-
-          // Show different toast based on quit count
-          if (newQuitCount > 2) {
-            showToast(`${data.studentName} left the test (${newQuitCount} times)`, { variant: 'warning' })
-          } else {
-            showToast(`${data.studentName} temporarily left the test`, { variant: 'info' })
-          }
-
-          return prevData.map((item) => (item.attemptId === data.attemptId ? { ...item, leaving: newQuitCount } : item))
-        }
-
-        case 'TIME_UPDATE':
-          return prevData.map((item) =>
-            item.attemptId === data.attemptId
-              ? { ...item, duration: parseDurationToSeconds(data.duration || '0 minutes') }
-              : item
-          )
-
-        default:
-          console.warn('Unknown WebSocket event:', data.event)
-          return prevData
-      }
-    })
-  }
-
-  // Parse duration string like "30 minutes" to seconds
-  const parseDurationToSeconds = (durationString: string): number => {
-    const match = durationString.match(/(\d+)\s*minutes?/)
-    if (match) {
-      return parseInt(match[1]) * 60
-    }
-    return 0
-  }
-
   const formatDuration = (seconds: number): string => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
@@ -325,9 +192,13 @@ const TestDetailPage: React.FC<TestDetailPageProps> = ({ testMonitorResponse }) 
     }
   }
 
-  const formatFeedback = (feedback: string) => {
+    const formatFeedback = (feedback: string | null | undefined) => {
+    if (!feedback) {
+      return <div className='text-xs text-gray-500 italic'>No feedback available</div>
+    }
+    
     return feedback.split('\n').map((item, index) => (
-      <div key={index} className='text-sm text-gray-700 mb-1'>
+      <div key={index} className='text-xs text-gray-700 mb-0.5 break-words whitespace-normal'>
         {item}
       </div>
     ))
@@ -459,7 +330,7 @@ const TestDetailPage: React.FC<TestDetailPageProps> = ({ testMonitorResponse }) 
                 <TableHead className='w-[150px]'>Student Name</TableHead>
                 <TableHead className='w-[80px]'>Score</TableHead>
                 <TableHead className='w-[140px]'>Start Time</TableHead>
-                <TableHead className='w-[300px]'>Feedback</TableHead>
+                <TableHead className='w-[250px]'>Feedback</TableHead>
                 <TableHead className='w-[100px]'>Duration</TableHead>
                 <TableHead className='w-[80px]'>Leaving</TableHead>
                 <TableHead className='w-[140px]'>End Time</TableHead>
@@ -471,24 +342,14 @@ const TestDetailPage: React.FC<TestDetailPageProps> = ({ testMonitorResponse }) 
                 <TableRow key={attempt.attemptId}>
                   <TableCell className='font-medium'>{attempt.studentName}</TableCell>
                   <TableCell>
-                    <span
-                      className={`font-medium ${
-                        attempt.score >= 80
-                          ? 'text-green-600'
-                          : attempt.score >= 60
-                            ? 'text-yellow-600'
-                            : attempt.score > 0
-                              ? 'text-red-600'
-                              : 'text-gray-400'
-                      }`}
-                    >
-                      {attempt.score > 0 ? `${attempt.score}%` : '-'}
-                    </span>
+                    <span className={`font-medium ${'text-green-600'}`}>{attempt.score > 0 ? attempt.score : '-'}</span>
                   </TableCell>
                   <TableCell className='text-sm text-gray-600'>{formatDateTime(attempt.startTime)}</TableCell>
-                  <TableCell className='max-w-[300px]'>
-                    <div className='space-y-1'>{formatFeedback(attempt.feedback)}</div>
-                  </TableCell>
+                                      <TableCell className='w-[250px] max-w-[250px] align-top'>
+                      <div className='space-y-1 text-xs leading-tight'>
+                        {formatFeedback(attempt.feedback)}
+                      </div>
+                    </TableCell>
                   <TableCell className='text-sm'>{formatDuration(attempt.duration)}</TableCell>
                   <TableCell className='text-center'>
                     <div className='flex items-center justify-center space-x-1'>
